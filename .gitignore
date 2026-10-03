@@ -1,0 +1,30 @@
+# 개인 크리에이터 데이터 — 각자 첫 실행 때 질문에 답하면 생성된다
+content/creator_profile.md
+content/episodes.md
+
+# 실행 중간물·완성물
+_workspace/
+_workspace_*/
+_workspace_shorts/
+_workspace_shorts_*/
+output/
+
+# 개인 Claude Code 설정 (플러그인·권한 등)
+.claude/settings.local.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 폴더 압축본 — 개인 데이터가 함께 들어갈 수 있음
+*.zip
+*.Zip
+*.ZIP

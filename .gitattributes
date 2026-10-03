@@ -1,0 +1,4 @@
+# Windows·Mac 팀원 간 줄바꿈 차이로 스킬·스크립트 파일이 바뀌지 않도록 LF로 통일
+* text=auto eol=lf
+*.png binary
+*.mp3 binary
