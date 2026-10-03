@@ -9,8 +9,9 @@ _workspace_shorts/
 _workspace_shorts_*/
 output/
 
-# 개인 Claude Code 설정 (플러그인·권한 등)
-.claude/settings.local.json
+# 로컬 전용 Claude Code 설정·하네스 (TTS 개발 하네스 등 — 플러그인에 포함하지 않음)
+.claude/
+CLAUDE.local.md
 
 # Python
 __pycache__/

@@ -11,3 +11,4 @@
 | 2026-10-03 | 내레이션 음성 자동 생성 연결 (프로필 음성, TTS 패키지 없으면 edge-tts CLI), 대본 음절 예산을 프로필 실측값 우선으로 | shorts-orchestrator/SKILL.md Phase 6, shorts-scriptwriting/SKILL.md | 음성 4종 비교 후 선택. 기본 속도로는 30초 초과 |
 | 2026-10-03 | 팀 공유판 정리: 하드코딩 경로 제거, 개인 데이터 `.gitignore`, 플러그인 설정을 `settings.local.json`으로 분리, 예시 프로필·README·requirements 추가, 음성 미설정·회차 기록 없음(첫 실행) 처리 | tts-orchestrator/SKILL.md, shorts-orchestrator/SKILL.md, 루트 파일 | 다른 팀과 공유 |
 | 2026-10-03 | 환경 점검·설치·인증 안내 스킬 `shorts-setup` 추가 (`check_env.py`: 필수/선택 항목 점검, 승인 후 설치, 로그인·API 키는 사용자가 직접), 오케스트레이터 Phase 0에 자동 점검 연결 | skills/shorts-setup, shorts-orchestrator/SKILL.md, README.md | 팀원 PC마다 도구·인증 상태가 다름. Codex 썸네일 연동 준비 |
+| 2026-10-03 | Claude Code 플러그인 마켓플레이스 구조로 전환 (youtube-shorts v1.0.0, 마켓 youtubeshorts): 루트에 `.claude-plugin/`, `agents/`, `skills/`. 스킬 경로를 `{PLUGIN}` 표기로, 에이전트 호출을 `youtube-shorts:` 접두사로, 사용자 데이터는 작업 폴더 기준으로. TTS 개발 하네스는 저장소에서 제외(로컬 전용) | 전체 | 마켓플레이스 설치 배포 |

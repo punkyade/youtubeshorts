@@ -1,6 +1,6 @@
-# 숏폼 콘텐츠 하네스
+# youtube-shorts — 숏폼 콘텐츠 하네스
 
-Claude Code에게 "요즘 쇼츠 트렌드 보고 나한테 맞는 영상 기획해줘"라고 말하면, 여러 AI 에이전트가 나눠서 일해 아래 결과물을 만들어 줍니다.
+Claude Code 플러그인입니다. 설치한 뒤 "요즘 쇼츠 트렌드 보고 나한테 맞는 영상 기획해줘"라고 말하면, 여러 AI 에이전트가 나눠서 일해 아래 결과물을 만들어 줍니다.
 
 - **트렌드 리포트** — 유튜브 쇼츠·인스타그램 릴스에서 지금 뜨는 포맷·주제·훅·음원 (출처·날짜 포함)
 - **기획안 3개** — 내 채널 프로필에 맞춰 점수를 매긴 아이디어 중 하나를 고른다
@@ -9,22 +9,46 @@ Claude Code에게 "요즘 쇼츠 트렌드 보고 나한테 맞는 영상 기획
 - **내레이션 음성** — TTS mp3 (얼굴·목소리 없는 채널용)
 - **대시보드** — 위 내용을 한 페이지로 모은 링크
 
-## 준비
+## 설치
 
-직접 설치할 것은 두 가지뿐입니다. 나머지는 Claude가 점검하고, 승인을 받아 설치해 줍니다.
+먼저 두 가지를 직접 설치하세요.
 
 1. [Claude Code](https://claude.com/claude-code)
 2. [Python 3.11 이상](https://www.python.org/downloads/) — Windows는 설치 화면에서 "Add python.exe to PATH"를 체크하세요
 
-그다음 이 폴더에서 Claude Code를 열고 **"환경 점검해줘"**라고 말하세요.
+그다음 Claude Code에서 플러그인을 설치합니다.
 
 ```
-cd <이 폴더>
+/plugin marketplace add punkyade/youtubeshorts
+/plugin install youtube-shorts@youtubeshorts
+/reload-plugins
+```
+
+터미널에서 한 번에 하려면:
+
+```
+claude plugin marketplace add punkyade/youtubeshorts
+claude plugin install youtube-shorts@youtubeshorts
+```
+
+설치는 사용자 단위라 어느 폴더에서든 쓸 수 있습니다. 콘텐츠용 폴더를 하나 만들어 그 안에서 Claude Code를 여는 것을 권장합니다. 프로필과 결과물이 그 폴더에 쌓입니다.
+
+```
+mkdir my-shorts && cd my-shorts
 claude
 > 환경 점검해줘
 ```
 
-### 환경 점검이 하는 일
+### 업데이트
+
+```
+/plugin marketplace update youtubeshorts
+/plugin update youtube-shorts@youtubeshorts
+```
+
+## 환경 점검
+
+처음에는 **"환경 점검해줘"**라고 말하세요. 숏폼 작업을 시작할 때도 자동으로 점검하고, 필수 항목이 빠져 있으면 제작보다 설치 안내를 먼저 합니다.
 
 1. **점검** — 필요한 도구를 몇 초 만에 확인합니다. 점검만 하고 아무것도 바꾸지 않습니다
 2. **보고** — 무엇이 없고, 어디에 필요하고, 없으면 어떻게 되는지 표로 알려 줍니다
@@ -32,14 +56,12 @@ claude
 4. **인증 안내** — 로그인·API 키처럼 본인이 해야 하는 일은 단계별로 안내합니다
 5. **재점검** — 새로 해결된 것과 남은 것만 알려 줍니다
 
-숏폼 작업을 시작할 때도 자동으로 점검합니다. 필수 항목이 빠져 있으면 제작보다 설치 안내를 먼저 합니다.
-
 ### 점검 항목
 
 | 항목 | 수준 | 용도 | 없으면 | 설치 |
 |---|---|---|---|---|
 | Python 3.11+ | 필수 | 스크립트 실행 | 동작 안 함 | 직접 설치 (위 링크) |
-| Pillow, edge-tts | 필수 | 썸네일 렌더링, 음성 생성 | 동작 안 함 | 승인 후 Claude가 `pip install -r requirements.txt` |
+| Pillow, edge-tts | 필수 | 썸네일 렌더링, 음성 생성 | 동작 안 함 | 승인 후 Claude가 `pip install` |
 | 한글 폰트 | 필수 | 썸네일 한글 문구 | 동작 안 함 | Windows 맑은 고딕, Mac Apple SD 산돌고딕은 기본 내장. Linux는 `sudo apt install fonts-nanum` (직접) |
 | 음성 서버 접속 | 필수 | edge-tts 음성 합성 | 동작 안 함 | 네트워크·방화벽 확인 |
 | ffmpeg | 선택 | mp3 품질 검사, (예정) 영상 자동 조립 | 음성 길이는 파일 크기로 추정 | 승인 후 Claude가 설치 (Windows `winget`, Mac `brew`). Linux는 `sudo apt install ffmpeg` (직접) |
@@ -71,20 +93,7 @@ ChatGPT 구독의 사용량을 씁니다. 회사 정책상 개인 계정 사용�
 
 무료 한도는 하루 10,000단위입니다. 하네스는 인기 차트(1단위) 위주로 쓰고, 검색(100단위)은 2~3회로 제한합니다.
 
-### 직접 점검하기
-
-Claude 없이 터미널에서 바로 확인할 수도 있습니다.
-
-```
-python .claude/skills/shorts-setup/scripts/check_env.py           # 표로 보기
-python .claude/skills/shorts-setup/scripts/check_env.py --online  # 음성 서버 접속까지 확인
-```
-
-빠진 항목마다 설치 명령과 "Claude가 승인 후 실행 가능 / 사용자가 직접 실행"이 함께 표시됩니다.
-
 ## 사용법
-
-이 폴더에서 Claude Code를 열고 그냥 말하면 됩니다.
 
 | 이렇게 말하면 | 이렇게 진행돼요 |
 |---|---|
@@ -100,18 +109,24 @@ python .claude/skills/shorts-setup/scripts/check_env.py --online  # 음성 서�
 
 ## 결과물 위치
 
+Claude Code를 연 폴더에 아래 구조로 쌓입니다.
+
 ```
+content/
+├── creator_profile.md    내 채널 프로필 (다음 실행에 재사용)
+└── episodes.md           시리즈 회차 기록
 output/shorts/{날짜}_{주제}/
-├── dashboard.html      대시보드 (claude.ai 비공개 링크로도 공개됨)
-├── script.md           사람이 읽는 대본 + 촬영 체크리스트
-├── script.json         대본 데이터
-├── narration.txt       TTS 원고
-├── narration.mp3       내레이션 음성
-├── thumbnail.png       썸네일
-└── trends.json         트렌드 조사 원본
+├── dashboard.html        대시보드 (claude.ai 비공개 링크로도 공개됨)
+├── script.md             사람이 읽는 대본 + 촬영 체크리스트
+├── script.json           대본 데이터
+├── narration.txt         TTS 원고
+├── narration.mp3         내레이션 음성
+├── thumbnail.png         썸네일
+└── trends.json           트렌드 조사 원본
+_workspace_shorts/        작업 중간물 (부분 재실행에 사용)
 ```
 
-내 채널 정보는 `content/creator_profile.md`, 시리즈 회차 기록은 `content/episodes.md`에 저장되어 다음 실행에 재사용됩니다. 이 파일들과 `output/`, `_workspace_shorts/`는 개인 데이터라 git에 올라가지 않습니다. 프로필 형식은 `content/creator_profile.example.md`를 참고하세요.
+이 폴더가 git 저장소라면, 첫 실행 때 개인 데이터를 `.gitignore`에 넣을지 물어봅니다.
 
 ## 알아둘 점
 
@@ -126,26 +141,28 @@ output/shorts/{날짜}_{주제}/
 ## 구성 (고치고 싶은 사람용)
 
 ```
-.claude/
-├── agents/     에이전트 정의 — 누가 하는가
-│   ├── trend-researcher.md      플랫폼별 트렌드 조사
-│   ├── content-planner.md       기획안 3개 + 점수
-│   ├── script-writer.md         초 단위 대본
-│   ├── thumbnail-designer.md    썸네일 렌더
-│   ├── content-reviewer.md      근거·정확성·정책 검토
-│   └── (core-developer, engine-developer, test-engineer, tts-qa-inspector — TTS 개발용)
-└── skills/     스킬 — 어떻게 하는가
-    ├── shorts-setup/            환경 점검·설치·인증 안내 (+ 점검 스크립트)
-    ├── shorts-orchestrator/     전체 흐름 조율 (+ 대시보드 생성 스크립트)
-    ├── shorts-trend-research/   조사 방법 (+ YouTube API 스크립트)
-    ├── shorts-planning/         기획·점수 기준
-    ├── shorts-scriptwriting/    대본 작성법
-    ├── thumbnail-design/        썸네일 규칙 (+ Pillow 렌더 스크립트)
-    └── tts-* / korean-text-processing   TTS 패키지 개발용
-CLAUDE.md                        하네스 트리거 규칙 (Claude Code가 자동으로 읽음)
-docs/harness-changelog.md        하네스 변경 이력
+.claude-plugin/
+├── marketplace.json        마켓플레이스 목록 (이름: youtubeshorts)
+└── plugin.json             플러그인 정보·버전 (이름: youtube-shorts)
+agents/                     에이전트 정의 — 누가 하는가 (호출 이름: youtube-shorts:<이름>)
+├── trend-researcher.md     플랫폼별 트렌드 조사
+├── content-planner.md      기획안 3개 + 점수
+├── script-writer.md        초 단위 대본
+├── thumbnail-designer.md   썸네일 렌더
+└── content-reviewer.md     근거·정확성·정책 검토
+skills/                     스킬 — 어떻게 하는가
+├── shorts-setup/           환경 점검·설치·인증 안내 (+ 점검 스크립트)
+├── shorts-orchestrator/    전체 흐름 조율 (+ 대시보드 생성, 오디오 검사 스크립트, 예시 프로필)
+├── shorts-trend-research/  조사 방법 (+ YouTube API 스크립트)
+├── shorts-planning/        기획·점수 기준
+├── shorts-scriptwriting/   대본 작성법
+└── thumbnail-design/       썸네일 규칙 (+ Pillow 렌더 스크립트)
+docs/harness-changelog.md   변경 이력
 ```
 
-결과가 아쉬우면 Claude에게 그대로 말하세요 ("기획안이 너무 어려워", "썸네일 글자가 작아"). 반복되는 피드백은 스킬에 반영해 하네스를 고칠 수 있습니다.
+**고친 뒤 시험·배포하는 법**
+1. `claude plugin validate .` — 구조 검증
+2. `claude --plugin-dir .` — 설치 없이 이 폴더의 플러그인으로 Claude Code 실행
+3. `.claude-plugin/plugin.json`과 `marketplace.json`의 `version`을 올리고 커밋·푸시 — 버전이 같으면 사용자의 업데이트에 반영되지 않습니다
 
-**TTS 패키지**(`tts` CLI)는 설계와 개발용 에이전트만 있고 코드는 아직 없습니다. 지금은 내레이션 음성을 `edge-tts` 명령으로 만듭니다. "TTS 구현해줘"라고 하면 TTS 개발 하네스가 동작합니다.
+결과가 아쉬우면 Claude에게 그대로 말하세요 ("기획안이 너무 어려워", "썸네일 글자가 작아"). 반복되는 피드백은 스킬에 반영해 하네스를 고칠 수 있습니다.
