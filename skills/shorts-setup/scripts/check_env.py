@@ -90,7 +90,7 @@ def check(online: bool) -> list[dict]:
     out.append(item("korean_font", "한글 폰트", "required", font is not None, font or "없음", "썸네일 한글 문구"))
 
     ff = shutil.which("ffmpeg")
-    out.append(item("ffmpeg", "ffmpeg", "optional", ff is not None, ff or "없음", "mp3 길이·품질 검사, (예정) 영상 자동 조립"))
+    out.append(item("ffmpeg", "ffmpeg", "optional", ff is not None, ff or "없음", "영상 자동 조립(필수), mp3 길이·품질 검사"))
 
     yt = bool(os.environ.get("YOUTUBE_API_KEY"))
     out.append(item("youtube_key", "YouTube API 키", "optional", yt, "설정됨" if yt else "없음",

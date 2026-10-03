@@ -7,7 +7,7 @@ description: "유튜브 쇼츠·인스타그램 릴스 숏폼 트렌드를 조�
 
 > **경로:** `{PLUGIN}` = youtube-shorts 플러그인 루트. 이 스킬이 로딩될 때 주어지는 "Base directory for this skill"의 두 단계 위 폴더다(`…/skills/<스킬 이름>` → 상위의 상위). 서브 에이전트는 오케스트레이터가 프롬프트로 준 절대 경로를 쓴다. Mac·Linux에서 `python`이 없으면 `python3`.
 
-숏폼 트렌드 조사 → 맞춤 기획 → 대본·썸네일 제작 → 검토 → 대시보드 공개를 조율한다.
+숏폼 트렌드 조사 → 맞춤 기획 → 대본·썸네일 제작 → 검토 → 대시보드 공개를 조율한다. 영상 조립은 끝난 뒤 `shorts-video` 스킬이 맡는다.
 
 ## 실행 모드: 서브 에이전트
 
@@ -95,7 +95,7 @@ script-writer와 thumbnail-designer를 한 메시지에서 동시에 호출한�
 
 ### Phase 6: 전달
 
-1. 최종물을 `output/shorts/{YYYYMMDD}_{slug}/`로 복사: `script.md`(사람이 읽는 대본), `script.json`, `narration.txt`, `thumbnail.png`, `trends.json`(두 플랫폼 병합). 시리즈 회차라면 `content/episodes.md`에 기록한다(없으면 새로 만든다).
+1. 최종물을 `output/shorts/{YYYYMMDD}_{slug}/`로 복사: `script.md`(사람이 읽는 대본), `script.json`, `narration.txt`, `thumbnail.png`, `thumbnail_spec.json`(영상 카드 배경에도 사용), `trends.json`(두 플랫폼 병합). 시리즈 회차라면 `content/episodes.md`에 기록한다(없으면 새로 만든다).
 2. 대시보드 생성:
    ```
    python {PLUGIN}/skills/shorts-orchestrator/scripts/build_dashboard.py _workspace_shorts output/shorts/{폴더}/dashboard.html "{시리즈명} {N}화"
@@ -104,10 +104,10 @@ script-writer와 thumbnail-designer를 한 메시지에서 동시에 호출한�
 3. `Artifact` 도구로 `dashboard.html`을 공개한다(첫 공개는 `icon: "video"`, description 한 문장). 같은 실행에서 고치면 같은 경로로 재공개해 URL을 유지한다.
 4. 내레이션 음성 생성 (자동): 프로필의 "음성 (TTS)" 절에 있는 목소리·속도로 `output/shorts/{폴더}/narration.mp3`를 만든다.
    - 프로필에 음성 설정이 없으면(첫 실행) `ko-KR-SunHiNeural`·`ko-KR-InJoonNeural` 두 목소리를 기본 속도로 만들고, 길이가 `length_sec`를 넘으면 맞춘 속도 버전도 함께 만들어 사용자에게 고르게 한다. 고른 목소리·속도와 실측 초당 음절 수(음절 수 ÷ 길이)를 프로필 "음성 (TTS)" 절에 기록하고, 나머지 파일은 지운다.
-   - 프로젝트의 `tts` 패키지가 설치되어 있으면: `tts file .../narration.txt -o .../narration.mp3 --voice {voice} --rate {배수}` (+12% → 1.12)
-   - 없으면 edge-tts CLI: `python -m edge_tts --file .../narration.txt --voice {voice} --rate={+N%} --write-media .../narration.mp3` (`pip install edge-tts` 필요)
+   - edge-tts CLI: `python -m edge_tts --file .../narration.txt --voice {voice} --rate={+N%} --write-media .../narration.mp3` (`pip install edge-tts` 필요)
    - 길이 확인: edge-tts mp3는 48kbps 고정이라 `파일크기(byte) × 8 / 48000`초. 대본 `length_sec`보다 2초 이상 길면 사용자에게 알리고 대본 축약(script-writer 재호출) 또는 영상 길이 연장 중 고르게 한다.
-5. 사용자에게 요약(트렌드 핵심 3줄, 선택 기획, 대시보드 링크, 파일 위치)과 피드백 질문.
+5. 영상 조립 안내: "`output/shorts/{폴더}/assets/`에 체크리스트의 `beatNN` 파일을 넣고 '영상 만들어줘'라고 하면 초안 mp4를 조립한다"고 알린다. 사용자가 지금 원하면(소스 없이 구성만 보기 포함) `shorts-video` 스킬로 진행한다.
+6. 사용자에게 요약(트렌드 핵심 3줄, 선택 기획, 대시보드 링크, 파일 위치)과 피드백 질문.
 
 ## 데이터 흐름
 
